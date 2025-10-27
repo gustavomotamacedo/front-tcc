@@ -1,3 +1,4 @@
+// src/pages/Quiz.tsx
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuiz } from "@/contexts/QuizContext";
@@ -10,40 +11,55 @@ const Quiz = () => {
   const { modulo } = useParams<{ modulo: string }>();
   const navigate = useNavigate();
   const { getModuleQuestions, saveQuizResult } = useQuiz();
-  
-  const [questions, setQuestions] = useState<any[]>([]);
-  const [currentQuestion, setCurrentQuestion] = useState(0);
+
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [answers, setAnswers] = useState<number[]>([]);
   const [timeLeft, setTimeLeft] = useState(30);
+  const [quizData, setQuizData] = useState<ReturnType<typeof getModuleQuestions> | null>(null);
 
+  // Carregar perguntas do módulo
   useEffect(() => {
-    if (modulo) {
-      const moduleQuestions = getModuleQuestions(modulo);
-      if (moduleQuestions.length === 0) {
-        toast.error("Módulo não encontrado");
-        navigate("/dashboard");
-        return;
-      }
-      setQuestions(moduleQuestions);
+    if (!modulo) {
+      toast.error("Módulo não especificado");
+      navigate("/dashboard");
+      return;
     }
-  }, [modulo]);
 
+    try {
+      const data = getModuleQuestions(modulo);
+      setQuizData(data);
+      setAnswers(Array(Object.keys(data.questions).length).fill(-1)); // opcional: pré-inicializar
+    } catch (err) {
+      console.error("Erro ao carregar quiz:", err);
+      toast.error("Módulo não encontrado");
+      navigate("/dashboard");
+    }
+  }, [modulo, navigate]);
+
+  // Timer por pergunta
   useEffect(() => {
-    if (questions.length > 0) {
-      const timer = setInterval(() => {
-        setTimeLeft((prev) => {
-          if (prev <= 1) {
-            handleNext();
-            return 30;
-          }
-          return prev - 1;
-        });
-      }, 1000);
+    if (!quizData) return;
 
-      return () => clearInterval(timer);
-    }
-  }, [currentQuestion, questions]);
+    const totalQuestions = Object.keys(quizData.questions).length;
+    if (currentQuestionIndex >= totalQuestions) return;
+
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          handleNext();
+          return 30;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [currentQuestionIndex, quizData]);
+
+  const totalQuestions = quizData ? Object.keys(quizData.questions).length : 0;
+  const questionKey = `resposta${currentQuestionIndex + 1}`;
+  const question = quizData?.questions[questionKey];
 
   const handleNext = () => {
     if (selectedAnswer === null) {
@@ -51,27 +67,39 @@ const Quiz = () => {
       return;
     }
 
-    const newAnswers = [...answers, selectedAnswer];
+    const newAnswers = [...answers];
+    newAnswers[currentQuestionIndex] = selectedAnswer;
     setAnswers(newAnswers);
 
-    if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
+    if (currentQuestionIndex < totalQuestions - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
       setSelectedAnswer(null);
       setTimeLeft(30);
     } else {
+      // Montar payload no formato esperado pela API: { resposta1: "3", resposta2: "1", ... }
+      const payload: Record<string, string> = {};
+      newAnswers.forEach((answer, idx) => {
+        payload[`resposta${idx + 1}`] = (answer + 1).toString(); // converte 0-based para 1-based
+      });
+
       if (modulo) {
-        saveQuizResult(modulo, newAnswers);
-        navigate(`/resultado/${modulo}`);
+        saveQuizResult(modulo, payload)
+          .then(() => {
+            navigate(`/resultado/${modulo}`);
+          })
+          .catch((err) => {
+            toast.error("Erro ao enviar respostas. Tente novamente.");
+            console.error(err);
+          });
       }
     }
   };
 
-  if (questions.length === 0) {
-    return null;
+  if (!quizData || !question) {
+    return <div className="flex items-center justify-center min-h-screen">Carregando...</div>;
   }
 
-  const question = questions[currentQuestion];
-  const progress = ((currentQuestion + 1) / questions.length) * 100;
+  const progress = ((currentQuestionIndex + 1) / totalQuestions) * 100;
 
   return (
     <div className="min-h-screen bg-quiz-background text-quiz-foreground flex items-center justify-center p-4">
@@ -95,9 +123,9 @@ const Quiz = () => {
 
         <div className="bg-quiz-option rounded-3xl p-8 shadow-elevated">
           <p className="text-sm text-muted-foreground mb-4">
-            Pergunta {currentQuestion + 1}/{questions.length}
+            Pergunta {currentQuestionIndex + 1}/{totalQuestions}
           </p>
-          <h2 className="text-2xl font-bold mb-8">{question.question}</h2>
+          <h2 className="text-2xl font-bold mb-8">{question.text}</h2>
 
           <div className="space-y-3">
             {question.options.map((option: string, index: number) => (
@@ -123,7 +151,7 @@ const Quiz = () => {
             disabled={selectedAnswer === null}
             className="w-full mt-8 h-14 text-lg font-semibold"
           >
-            {currentQuestion === questions.length - 1 ? "Finalizar" : "Próxima"}
+            {currentQuestionIndex === totalQuestions - 1 ? "Finalizar" : "Próxima"}
           </Button>
         </div>
 
