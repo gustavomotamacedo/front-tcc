@@ -1,14 +1,23 @@
+// src/contexts/QuizContext.tsx
 import React, { createContext, useContext, useState, ReactNode } from "react";
-import { mockUser, mockModules, mockQuestions, User, Module, UserProgress } from "@/data/mockData";
+import {
+  User,
+  Module,
+  QuizResult,
+  UserProgress,
+} from "@/types/quiz";
+import { submitQuizAnswers } from "@/services/quizApi";
+import { getQuizData } from "@/services/quizData";
+import { MODULES } from "@/constants/modules";
 
 interface QuizContextType {
   user: User | null;
   modules: Module[];
-  login: (email: string, password: string) => boolean;
+  login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
-  getModuleQuestions: (moduleId: string) => any[];
-  saveQuizResult: (moduleId: string, answers: number[]) => void;
-  getModuleResult: (moduleId: string) => any;
+  getModuleQuestions: (moduleId: string) => ReturnType<typeof getQuizData>;
+  saveQuizResult: (moduleId: string, answers: Record<string, string>) => Promise<QuizResult>;
+  getModuleResult: (moduleId: string) => QuizResult | null;
   userProgress: UserProgress;
 }
 
@@ -18,9 +27,10 @@ export const QuizProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [userProgress, setUserProgress] = useState<UserProgress>({});
 
-  const login = (email: string, password: string): boolean => {
-    if (email === mockUser.email && password === mockUser.password) {
-      setUser(mockUser);
+  const login = async (email: string, password: string): Promise<boolean> => {
+    // Substitua por chamada real à API de autenticação quando disponível
+    if (email === "aluno@exemplo.com" && password === "senha123") {
+      setUser({ id: "1", name: "Aluno Exemplo", email });
       return true;
     }
     return false;
@@ -28,37 +38,39 @@ export const QuizProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = () => {
     setUser(null);
+    setUserProgress({});
   };
 
   const getModuleQuestions = (moduleId: string) => {
-    return mockQuestions[moduleId] || [];
+    return getQuizData(moduleId);
   };
 
-  const saveQuizResult = (moduleId: string, answers: number[]) => {
-    const questions = getModuleQuestions(moduleId);
-    const score = answers.reduce((acc, answer, index) => {
-      return acc + (answer === questions[index].correctAnswer ? 1 : 0);
-    }, 0);
-
-    setUserProgress((prev) => ({
-      ...prev,
-      [moduleId]: {
-        completed: true,
-        score,
-        answers,
-      },
-    }));
+  const saveQuizResult = async (moduleId: string, answers: Record<string, string>) => {
+    try {
+      const result = await submitQuizAnswers(moduleId, answers);
+      setUserProgress((prev) => ({
+        ...prev,
+        [moduleId]: {
+          completed: true,
+          result,
+        },
+      }));
+      return result;
+    } catch (error) {
+      console.error("Erro ao salvar resultado do quiz:", error);
+      throw error;
+    }
   };
 
-  const getModuleResult = (moduleId: string) => {
-    return userProgress[moduleId];
+  const getModuleResult = (moduleId: string): QuizResult | null => {
+    return userProgress[moduleId]?.result || null;
   };
 
   return (
     <QuizContext.Provider
       value={{
         user,
-        modules: mockModules,
+        modules: MODULES,
         login,
         logout,
         getModuleQuestions,
