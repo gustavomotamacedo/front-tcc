@@ -1,0 +1,51 @@
+{
+  "moduleId": "processamento",
+  "title": "Regras de Processamento",
+  "questions": {
+    "resposta1": {
+      "text": "O que significa “processamento” em um programa?",
+      "options": [
+        "Exibir mensagens na tela do usuário.",
+        "Armazenar dados permanentemente em um arquivo.",
+        "Receber dados do usuário sem fazer nada com eles.",
+        "Executar instruções e realizar cálculos ou ações."
+      ]
+    },
+    "resposta2": {
+      "text": "Qual é a primeira etapa do processamento de um programa?",
+      "options": [
+        "Exibir o resultado final.",
+        "Receber e ler os dados de entrada.",
+        "Executar operações lógicas complexas.",
+        "Salvar os dados em memória."
+      ]
+    },
+    "resposta3": {
+      "text": "O que é um “dado de entrada”?",
+      "options": [
+        "Um valor que o programa recebe para processar.",
+        "O resultado final exibido pelo programa.",
+        "Uma instrução de código escrita pelo programador.",
+        "Um erro gerado durante a execução."
+      ]
+    },
+    "resposta4": {
+      "text": "O que é um “resultado” em um programa?",
+      "options": [
+        "O código-fonte do programa.",
+        "Os dados inseridos pelo usuário.",
+        "O valor ou informação produzida após o processamento.",
+        "A interface gráfica do software."
+      ]
+    },
+    "resposta5": {
+      "text": "O que acontece se o programa não receber dados de entrada?",
+      "options": [
+        "O programa executa com dados padrão.",
+        "O programa exibe um erro e continua.",
+        "O programa repete a última operação realizada.",
+        "Ele não poderá processar nada."
+      ]
+    }
+  }
+}

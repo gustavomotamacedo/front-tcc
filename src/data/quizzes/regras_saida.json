@@ -1,0 +1,96 @@
+{
+  "moduleId": "regras_saida",
+  "title": "Regras de saida",
+  "questions": {
+    "resposta1": {
+      "text": "O que o código print(\"Olá\", \"Mundo\") exibe por padrão?",
+      "options": [
+        "OláMundo",
+        "Olá Mundo",
+        "Olá, Mundo",
+        "Olá\\nMundo"
+      ]
+    },
+    "resposta2": {
+      "text": "Qual função exibe/imprime um texto na tela?",
+      "options": [
+        "echo()",
+        "display()",
+        "output()",
+        "print()"
+      ]
+    },
+    "resposta3": {
+      "text": "Qual será a saída de print(\"O resultado é:\", 5 + 3)?",
+      "options": [
+        "O resultado é: 5 + 3",
+        "O resultado é: 8",
+        "O resultado é:13",
+        "Erro de sintaxe"
+      ]
+    },
+    "resposta4": {
+      "text": "Qual será a saída de print(\"Preço:\", 10, 20, sep=\"-\")?",
+      "options": [
+        "Preço: 10 20",
+        "Preço:-10-20",
+        "Preço:10-20",
+        "Preço: 10-20"
+      ]
+    },
+    "resposta5": {
+      "text": "Dado o código: print(\"Linha1\") print(\"Linha2\"), qual saída será exibida?",
+      "options": [
+        "Linha1Linha2",
+        "Linha1 Linha2",
+        "Linha1\nLinha2",
+        "Erro de sintaxe"
+      ]
+    },
+    "resposta6": {
+      "text": "O que o código print(\"Python\", \"é\", \"legal\", sep=\"*\") exibe?",
+      "options": [
+        "Python é legal",
+        "Python*é*legal",
+        "Python*é legal",
+        "Python é*legal"
+      ]
+    },
+    "resposta7": {
+      "text": "O que será exibido pelo código print(\"Fim\", end=\"!!!\")?",
+      "options": [
+        "Fim!!!",
+        "Fim !!!",
+        "Fim\n!!!",
+        "!!!Fim"
+      ]
+    },
+    "resposta8": {
+      "text": "Qual será a saída do código print(\"A\", \"B\", \"C\", sep=\"-\")?",
+      "options": [
+        "A B C",
+        "A-B-C",
+        "ABC",
+        "A--B--C"
+      ]
+    },
+    "resposta9": {
+      "text": "Qual será a saída do código print(\"123\", \"456\", sep=\"\")?",
+      "options": [
+        "123 456",
+        "123456",
+        "123\"\"456",
+        "Erro"
+      ]
+    },
+    "resposta10": {
+      "text": "O que acontece com: print(\"Python\", end=\" \"); print(\"Rocks!\")?",
+      "options": [
+        "Python\nRocks!",
+        "Python Rocks!",
+        "PythonRocks!",
+        "Python  Rocks!"
+      ]
+    }
+  }
+}

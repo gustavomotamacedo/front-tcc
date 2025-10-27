@@ -1,0 +1,96 @@
+{
+  "moduleId": "operacoes_logicas",
+  "title": "Operacoes Logicas",
+  "questions": {
+    "resposta1": {
+      "text": "Qual operador lógico retorna True apenas se as duas condições forem verdadeiras?",
+      "options": [
+        "OR",
+        "AND",
+        "NOT",
+        "XOR"
+      ]
+    },
+    "resposta2": {
+      "text": "O que o operador NOT faz?",
+      "options": [
+        "Inverte o valor lógico",
+        "Retorna True se ambas forem verdadeiras",
+        "Retorna True se pelo menos uma for verdadeira",
+        "Combina duas expressões com adição"
+      ]
+    },
+    "resposta3": {
+      "text": "Qual expressão resulta em True?",
+      "options": [
+        "False OR False",
+        "True OR False",
+        "False AND True",
+        "NOT True"
+      ]
+    },
+    "resposta4": {
+      "text": "Se A = True e B = False, qual resultado teremos para 'A AND B'?",
+      "options": [
+        "True",
+        "False",
+        "True AND False",
+        "Erro"
+      ]
+    },
+    "resposta5": {
+      "text": "Qual entrada faz a expressão 'X OR Y' ser verdadeira?",
+      "options": [
+        "X = False, Y = False",
+        "X = False, Y = True",
+        "X = True, Y = False",
+        "Todas as anteriores exceto a primeira"
+      ]
+    },
+    "resposta6": {
+      "text": "Se C = True, qual será o valor de 'NOT C'?",
+      "options": [
+        "True",
+        "False",
+        "1",
+        "0"
+      ]
+    },
+    "resposta7": {
+      "text": "P = False e Q = False. Qual o resultado de 'P OR Q'?",
+      "options": [
+        "True",
+        "False",
+        "True OR False",
+        "Indeterminado"
+      ]
+    },
+    "resposta8": {
+      "text": "M = True e N = True. Qual o resultado de '(M AND N) OR (NOT M)'?",
+      "options": [
+        "True",
+        "False",
+        "True AND False",
+        "NOT True"
+      ]
+    },
+    "resposta9": {
+      "text": "Qual é o resultado de '(True XOR False)'?",
+      "options": [
+        "True",
+        "False",
+        "True XOR False",
+        "1"
+      ]
+    },
+    "resposta10": {
+      "text": "Se X = True, Y = True e Z = False, qual o resultado de '(X AND Y) OR Z'?",
+      "options": [
+        "True",
+        "False",
+        "True AND False",
+        "Z"
+      ]
+    }
+  }
+}

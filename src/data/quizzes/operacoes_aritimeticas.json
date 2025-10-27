@@ -1,0 +1,33 @@
+{
+  "moduleId": "operacoes_aritimeticas",
+  "title": "Operacoes Aritimeticas",
+  "questions": {
+    "resposta1": {
+      "text": "Qual operador realiza a soma de dois números?",
+      "options": [
+        "-",
+        "*",
+        "+",
+        "/"
+      ]
+    },
+    "resposta2": {
+      "text": "Qual operador realiza a multiplicação de dois números?",
+      "options": [
+        "+",
+        "*",
+        "/",
+        "-"
+      ]
+    },
+    "resposta3": {
+      "text": "Qual operador realiza a divisão de dois números?",
+      "options": [
+        "+",
+        "-",
+        "*",
+        "/"
+      ]
+    }
+  }
+}

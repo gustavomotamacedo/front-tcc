@@ -1,0 +1,51 @@
+{
+  "moduleId": "fluxo",
+  "title": "Regras de Fluxo",
+  "questions": {
+    "resposta1": {
+      "text": "O que acontece em um programa com fluxo sequencial?",
+      "options": [
+        "O programa pula comandos aleatoriamente.",
+        "O programa executa os comandos um após o outro, na ordem escrita.",
+        "O programa repete todos os comandos infinitamente.",
+        "O programa executa apenas os comandos dentro de blocos if."
+      ]
+    },
+    "resposta2": {
+      "text": "Para que serve o comando if?",
+      "options": [
+        "Para repetir um bloco de código várias vezes.",
+        "Para declarar uma nova variável.",
+        "Para finalizar a execução do programa.",
+        "Para escolher se um bloco de código será executado ou não."
+      ]
+    },
+    "resposta3": {
+      "text": "O que é uma condição em um código?",
+      "options": [
+        "Um tipo de variável numérica.",
+        "Um comando que imprime mensagens na tela.",
+        "Um valor que só pode ser verdadeiro ou falso.",
+        "Uma função que realiza cálculos matemáticos."
+      ]
+    },
+    "resposta4": {
+      "text": "O que significa quando a condição do if é verdadeira?",
+      "options": [
+        "O bloco dentro do if será executado.",
+        "O bloco dentro do if será ignorado.",
+        "O programa será encerrado imediatamente.",
+        "A condição será testada novamente em um loop."
+      ]
+    },
+    "resposta5": {
+      "text": "O que significa quando a condição do if é falsa?",
+      "options": [
+        "O bloco dentro do if será executado duas vezes.",
+        "O programa exibirá uma mensagem de erro.",
+        "O bloco dentro do if será ignorado.",
+        "O programa voltará ao início automaticamente."
+      ]
+    }
+  }
+}

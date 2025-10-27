@@ -1,0 +1,51 @@
+{
+  "moduleId": "variaveis",
+  "title": "Variáveis",
+  "questions": {
+    "resposta1": {
+      "text": "O que é uma variável em programação?",
+      "options": [
+        "Um comando que repete instruções",
+        "Um tipo de erro de sintaxe",
+        "Um espaço na memória que armazena um valor que pode ser alterado",
+        "Uma função pré-definida"
+      ]
+    },
+    "resposta2": {
+      "text": "Como você atribui o valor 5 à variável 'x'?",
+      "options": [
+        "x = 5",
+        "5 = x",
+        "var x == 5",
+        "x := 5"
+      ]
+    },
+    "resposta3": {
+      "text": "Qual o tipo de dado da variável que armazena o número 3.14?",
+      "options": [
+        "inteiro",
+        "decimal (ponto flutuante)",
+        "texto",
+        "booleano"
+      ]
+    },
+    "resposta4": {
+      "text": "Se a = 10 e b = 5, qual será o valor de c = a + b?",
+      "options": [
+        "5",
+        "10",
+        "15",
+        "50"
+      ]
+    },
+    "resposta5": {
+      "text": "Qual o tipo de dado da variável 'x = True'?",
+      "options": [
+        "inteiro",
+        "decimal",
+        "booleano",
+        "texto"
+      ]
+    }
+  }
+}
