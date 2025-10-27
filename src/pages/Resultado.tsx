@@ -1,41 +1,61 @@
+// src/pages/Resultado.tsx
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuiz } from "@/contexts/QuizContext";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { CheckCircle2, XCircle, Trophy, RotateCcw, Home } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import { QuizData, QuizResult } from "@/types/quiz";
 
 const Resultado = () => {
   const { modulo } = useParams<{ modulo: string }>();
   const navigate = useNavigate();
   const { getModuleQuestions, getModuleResult } = useQuiz();
-  
-  const [questions, setQuestions] = useState<any[]>([]);
-  const [result, setResult] = useState<any>(null);
+
+  const [quizData, setQuizData] = useState<QuizData | null>(null);
+  const [result, setResult] = useState<QuizResult | null>(null);
 
   useEffect(() => {
-    if (modulo) {
-      const moduleQuestions = getModuleQuestions(modulo);
-      const moduleResult = getModuleResult(modulo);
-      
-      if (!moduleResult) {
-        navigate("/dashboard");
-        return;
-      }
-      
-      setQuestions(moduleQuestions);
-      setResult(moduleResult);
+    if (!modulo) {
+      navigate("/dashboard");
+      return;
     }
-  }, [modulo]);
 
-  if (!result || questions.length === 0) {
-    return null;
+    const savedResult = getModuleResult(modulo);
+    if (!savedResult) {
+      // Se não há resultado salvo, redireciona (ex: usuário tentou acessar diretamente)
+      navigate("/dashboard");
+      return;
+    }
+
+    try {
+      const data = getModuleQuestions(modulo);
+      setQuizData(data);
+      setResult(savedResult);
+    } catch (err) {
+      console.error("Erro ao carregar quiz:", err);
+      navigate("/dashboard");
+    }
+  }, [modulo, navigate]);
+
+  if (!result || !quizData) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        Carregando...
+      </div>
+    );
   }
 
-  const score = result.score;
-  const total = questions.length;
-  const percentage = (score / total) * 100;
+  const total = Object.keys(quizData.questions).length;
+  const acertos = result.acertos;
+  const percentage = (acertos / total) * 100;
   const passed = percentage >= 70;
 
   return (
@@ -52,11 +72,17 @@ const Resultado = () => {
       </header>
 
       <main className="container mx-auto px-4 py-8 max-w-4xl">
-        <Card className={`mb-8 ${passed ? "border-success" : "border-destructive"} border-2`}>
+        <Card
+          className={`mb-8 ${
+            passed ? "border-success" : "border-destructive"
+          } border-2`}
+        >
           <CardHeader className="text-center">
-            <div className={`mx-auto w-24 h-24 rounded-full flex items-center justify-center mb-4 ${
-              passed ? "bg-gradient-success" : "bg-gradient-error"
-            }`}>
+            <div
+              className={`mx-auto w-24 h-24 rounded-full flex items-center justify-center mb-4 ${
+                passed ? "bg-gradient-success" : "bg-gradient-error"
+              }`}
+            >
               {passed ? (
                 <Trophy className="w-12 h-12 text-white" />
               ) : (
@@ -76,16 +102,22 @@ const Resultado = () => {
             <div className="space-y-4">
               <div className="flex justify-around text-center">
                 <div>
-                  <p className="text-4xl font-bold text-success">{score}</p>
+                  <p className="text-4xl font-bold text-success">
+                    {result.acertos}
+                  </p>
                   <p className="text-sm text-muted-foreground">Acertos</p>
                 </div>
                 <div>
-                  <p className="text-4xl font-bold text-destructive">{total - score}</p>
+                  <p className="text-4xl font-bold text-destructive">
+                    {result.erros}
+                  </p>
                   <p className="text-sm text-muted-foreground">Erros</p>
                 </div>
                 <div>
                   <p className="text-4xl font-bold">{percentage.toFixed(0)}%</p>
-                  <p className="text-sm text-muted-foreground">Aproveitamento</p>
+                  <p className="text-sm text-muted-foreground">
+                    Aproveitamento
+                  </p>
                 </div>
               </div>
               <Progress value={percentage} className="h-3" />
@@ -94,21 +126,27 @@ const Resultado = () => {
         </Card>
 
         <h2 className="text-2xl font-bold mb-4">Revisão das Questões</h2>
-        
+
         <div className="space-y-4">
-          {questions.map((question, index) => {
-            const userAnswer = result.answers[index];
-            const isCorrect = userAnswer === question.correctAnswer;
-            
+          {Object.entries(quizData.questions).map(([key, question], index) => {
+            const feedback = result.feedback[key];
+            const revisao = result.revisoes[key];
+            const isCorrect = feedback?.correto === true;
+
             return (
-              <Card key={question.id} className={`${isCorrect ? "border-success" : "border-destructive"} border-l-4`}>
+              <Card
+                key={key}
+                className={`${
+                  isCorrect ? "border-success" : "border-destructive"
+                } border-l-4`}
+              >
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <CardTitle className="text-lg mb-2">
                         Pergunta {index + 1}
                       </CardTitle>
-                      <p className="text-foreground">{question.question}</p>
+                      <p className="text-foreground">{question.text}</p>
                     </div>
                     {isCorrect ? (
                       <CheckCircle2 className="w-8 h-8 text-success flex-shrink-0" />
@@ -118,42 +156,22 @@ const Resultado = () => {
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  <div className="space-y-2">
-                    {question.options.map((option: string, optIndex: number) => {
-                      const isUserAnswer = optIndex === userAnswer;
-                      const isCorrectAnswer = optIndex === question.correctAnswer;
-                      
-                      return (
-                        <div
-                          key={optIndex}
-                          className={`p-3 rounded-lg ${
-                            isCorrectAnswer
-                              ? "bg-success/10 border-2 border-success"
-                              : isUserAnswer
-                              ? "bg-destructive/10 border-2 border-destructive"
-                              : "bg-muted"
-                          }`}
-                        >
-                          <div className="flex items-center justify-between">
-                            <span>{option}</span>
-                            {isCorrectAnswer && (
-                              <span className="text-xs font-semibold text-success">Correta</span>
-                            )}
-                            {isUserAnswer && !isCorrectAnswer && (
-                              <span className="text-xs font-semibold text-destructive">Sua resposta</span>
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                  
                   <div className="bg-muted p-4 rounded-lg">
                     <p className="text-sm font-semibold mb-1">
                       {isCorrect ? "✅ Correto!" : "❌ Incorreto"}
                     </p>
-                    <p className="text-sm text-muted-foreground">{question.explanation}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {feedback?.mensagem}
+                    </p>
                   </div>
+
+                  {/* Só mostra a revisão se a resposta estiver errada */}
+                  {!isCorrect && (
+                    <div className="bg-accent p-4 rounded-lg">
+                      <p className="text-sm font-semibold mb-1">📖 Revisão</p>
+                      <p className="text-sm text-muted-foreground text-black">{revisao}</p>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             );
@@ -169,10 +187,7 @@ const Resultado = () => {
             <RotateCcw className="w-4 h-4 mr-2" />
             Refazer Quiz
           </Button>
-          <Button
-            onClick={() => navigate("/dashboard")}
-            className="flex-1"
-          >
+          <Button onClick={() => navigate("/dashboard")} className="flex-1">
             <Home className="w-4 h-4 mr-2" />
             Voltar aos Módulos
           </Button>
